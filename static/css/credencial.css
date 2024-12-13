@@ -1,0 +1,216 @@
+
+body {
+    background-color: rgba(255, 255, 255, 0.8);
+    font-family: Arial, sans-serif;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between; /* Cambiado de space-between a flex-start */
+    height: 120vh;
+    margin: 0; /* Asegúrate de que no haya márgenes */
+    position: relative;
+}
+
+
+body::before {
+    content: "";
+    background-image: url('../imagenes/hix.jpg');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.7;
+    height: 100vh;
+}
+
+.credencial {
+    position: relative;
+    width: 100%;
+    display: flex;
+    max-width: 550px;
+    border: 2px solid #444;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin: auto; /* O puedes eliminarlo completamente */
+    flex-direction: column;
+}
+
+
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ffffff;
+    background-image: url('../imagenes/pajaro.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+
+.background-im {
+    position: absolute; /* Posiciona la imagen en el fondo */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ffffff;
+    background-size: 30%; /* Ajusta el tamaño de la imagen al 30% del contenedor */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-position: center; /* Centra la imagen */
+    z-index: 0; /* Asegura que la imagen esté detrás */
+}
+
+
+.logos, .contenido, .empresa {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+.contenido {
+    display: flex;
+    justify-content: flex-start; /* Cambiar a flex-start para mejor alineación */
+    align-items: center;
+    padding: 0px 5px;
+}
+
+.foto {
+    flex-basis: 160px; /* Ancho del contenedor */
+    height: 160px; /* Altura del contenedor */
+    display: flex; /* Usar flexbox para centrar contenido */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+}
+
+.foto img {
+    width: 100%; /* Asegurar que la imagen ocupe todo el contenedor */
+    height: auto; /* Mantener la proporción de la imagen */
+    max-height: 100%; /* Asegurar que la imagen no exceda la altura del contenedor */
+
+}
+
+
+
+
+.info {
+    text-align: left; /* Cambiar a izquierda para justificar el texto */
+    color: #000000; /* Color del texto */
+    flex-basis: 60%; /* 60% del espacio para la info */
+    margin: 0 10px; /* Espacio entre los elementos */
+    padding: 0px 0;
+    text-shadow: 
+        1px 1px 0 #ffffff, /* Sombra en diagonal derecha */
+        -1px -1px 0 #ffffff, /* Sombra en diagonal izquierda */
+        1px -1px 0 #ffffff, /* Sombra en diagonal arriba derecha */
+        -1px 1px 0 #ffffff; /* Sombra en diagonal abajo izquierda */
+}
+
+
+.info h2 {
+    margin: 0;
+    font-size: 18px; /* Tamaño más pequeño para dispositivos más pequeños */
+}
+
+.info p {
+    margin: 5px 0;
+    color: #000000;
+    font-size: 14px; /* Ajustar el tamaño de fuente */
+}
+
+.qr {
+    flex-basis: 160px; /* Igualar el ancho al de .foto */
+    height: 160px; /* Igualar la altura al de .foto */
+    display: flex; /* Usar flexbox para centrar contenido */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+}
+
+.qr img {
+    width: 100%; /* Usar un porcentaje para el tamaño del código QR */
+    height: auto; /* Mantener la proporción del QR */
+    max-height: 100%; /* Asegurar que la imagen no exceda la altura del contenedor */
+}
+
+.empresa {
+    background-color: #444;
+    color: white;
+    text-align: center;
+    padding: 0.5px 0;
+}
+
+.empresa p {
+    margin: 2px 0;
+    color: #ccc;
+    font-size: 14px; /* Ajustar el tamaño de fuente */
+}
+
+.logos {
+    display: flex; /* Usar flexbox para alinear las imágenes */
+    justify-content: space-between; /* Espacio entre las imágenes */
+    align-items: center; /* Alinear verticalmente */
+    padding: 0px 20px; /* Espacio vertical y margen lateral del contenedor */
+}
+
+.logos img {
+    width: 30%; /* Ajusta según el tamaño que desees */
+    height: auto;
+}
+
+.logos img:first-child {
+    margin-left: 10px 0; /* Margen a la izquierda de la primera imagen */
+}
+
+.logos img:last-child {
+    margin-right: 10px 0; /* Margen a la derecha de la última imagen */
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 600px) {
+    .contenido {
+        flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+        align-items: center;
+    }
+
+    
+    .foto img, .qr img {
+        width: 200px; /* Ajustar tamaño en pantallas pequeñas */
+        height: auto;
+        max-height: none;
+        padding: 10px;
+    }
+
+    .info {
+        text-align: center; /* Centrar texto en pantallas pequeñas */
+        margin: 0; /* Espaciado vertical */
+        flex-basis: 100%; /* Ocupa el 100% en pantallas pequeñas */
+    }
+}
+
+.footer {
+    width: 100%;
+    height: 165px; /* Altura estándar */
+    border: none; 
+    padding: 0;
+    position: relative; /* En flujo normal del documento */
+    color: white; /* Asegúrate de que el texto sea legible */
+    margin: 0;
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 600px) {
+    .footer {
+        width: 100%;
+        height: 285px; /* Altura estándar */
+    }
+
+}

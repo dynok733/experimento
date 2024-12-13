@@ -1,0 +1,245 @@
+body {
+    background-color: rgba(255, 255, 255, 0.8);
+    font-family: Arial, sans-serif;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    background-image: url('../imagenes/hix.jpg');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.7;
+    height: 100vh;
+}
+
+.container {
+    position: relative;
+    width: 40%;
+    display: flex;
+    justify-content:center;
+    gap: 20px;
+    background-color: #ffffff;
+    border: 2px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    margin: auto;
+    padding: 15px;
+    flex-wrap: wrap; /* Permitirá que los elementos se apilen en pantallas pequeñas */
+}
+
+/* Ajustar el tamaño y orden de los contenedores en pantallas pequeñas */
+.form-container {
+    width: 30%;
+    order: 2;
+  
+    padding-bottom: 0px; /* Añadir algo de espacio debajo del formulario */
+}
+
+
+.table-container {
+    width: 50%;
+    order: 1;
+    overflow-x: auto;
+}
+
+h1, h2 {
+    text-align: center;
+    font-size: 24px;
+    margin: 10;
+    padding: 0;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+.input-group {
+    position: relative;
+    margin: 10px 0;
+}
+
+.input-group i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000000;
+}
+
+.input-group i:first-child {
+    left: 10px;
+}
+
+.input-group i:last-child {
+    right: 10px;
+}
+
+input[type="password"], input[type="text"], input[type="email"], input[type="file"], select {
+    width: 75%;
+    padding: 0px 40px;
+    margin: 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    outline: none;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+    border-bottom: 2px solid #aaa;
+}
+
+button[type="submit"] {
+    width: 80%;
+    padding: 10px;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 40px;
+}
+
+button[type="submit"]:hover {
+    background-color: #444;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+table th, table td {
+    padding: 5px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+.actions a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.error-messages {
+    color: red;
+    list-style-type: none;
+    padding: 0;
+}
+
+.error-messages li {
+    margin: 5px 0;
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 600px) {
+    /* Limitar el ancho del contenedor al máximo de un teléfono */
+    .container {
+        width: 89%; /* Ocupa todo el ancho disponible */
+        max-width: 400px; /* Limita el ancho máximo al de un teléfono promedio */
+        padding: 15px; /* Ajustar el padding para evitar que se vea apretado */
+        gap: 10px;
+    }
+
+    .form-container, .table-container {
+        width: 100%; /* Ambos ocupan el 100% del ancho */
+    }
+
+    .table-container {
+        order: 2; /* La tabla aparece después del formulario */
+    }
+
+    table {
+        font-size: 14px; /* Reducir tamaño de la fuente de la tabla */
+    }
+
+    /* Ajustar la visibilidad de los botones de acción */
+    .actions a {
+        font-size: 12px; /* Ajustar tamaño de fuente */
+        padding: 8px 12px; /* Ajustar tamaño de los botones */
+    }
+
+    button[type="submit"] {
+        width: 90%; /* Mejorar el ancho del botón de envío */
+        margin: 10px auto; /* Centrar el botón */
+    }
+
+    /* Mejorar márgenes de los inputs y otros elementos */
+    input[type="text"], input[type="password"], input[type="email"], input[type="file"], select {
+        width: 90%; /* Establecer el ancho del campo de entrada al 100% */
+        padding: 10px; /* Añadir más espacio dentro de los campos */
+    }
+}
+
+/* Estilo común para los botones de acción */
+.actions a {
+    padding: 11px 11px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    display: flex;
+    align-items: center; /* Alineación centrada de los iconos */
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    transition: background-color 0.3s ease;
+    margin: 1px;
+}
+
+/* Estilo para el botón "Editar" */
+.btn-edit {
+    background-color: #28a745; /* Verde */
+}
+
+.btn-edit:hover {
+    background-color: #218838; /* Verde oscuro al pasar el ratón */
+}
+
+/* Estilo para el botón "Eliminar" */
+.btn-delete {
+    background-color: #dc3545; /* Rojo */
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Rojo oscuro al pasar el ratón */
+}  
+.footer {
+    width: 100%;
+    height: 165px; /* Altura estándar */
+    border: none; 
+    padding: 0;
+    position: relative; /* En flujo normal del documento */
+    color: white; /* Asegúrate de que el texto sea legible */
+    margin: 0;
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 600px) {
+    .footer {
+        width: 100%;
+        height: 285px; /* Altura estándar */
+    }
+
+}

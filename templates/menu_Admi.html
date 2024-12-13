@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prueba.css') }}">
+    <style>
+        /* Estilos para el modal */
+        .modal {
+            display: none; /* Inicialmente oculto */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #444;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ff0000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #555;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 3px;
+        }
+
+        button:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div>
+            <!-- Enlaces del menú siempre visibles en todas las resoluciones -->
+            <a href="{{ url_for('credencial') }}" target="paginas">Inicio</a>
+            <a href="{{ url_for('roles') }}" target="paginas">rol </a>
+            <a href="{{ url_for('index') }}" target="paginas">Formulario</a>
+
+            <a href="{{ url_for('bitacoras') }}" target="paginas">bitacoras</a>
+            <a href="{{ url_for('contraseña') }}" target="paginas">Contraseña</a>
+            <!-- El enlace de salir abre el modal -->
+            <a href="#" id="salir" onclick="confirmarSalida()">Salir</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- El iframe cargará las páginas cuando el menú de navegación cambie -->
+        <iframe name="paginas" id="iframe-paginas" src="{{ url_for('menu_Usuario') }}" frameborder="0"></iframe>
+    </main>
+
+    <!-- Modal de confirmación -->
+    <div id="confirmationExitModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExitModal()">&times;</span>
+            <p>¿Estás seguro de que deseas salir de la sección?</p>
+            <button onclick="salirSeccion()">Sí, salir</button>
+            <button onclick="closeExitModal()">No, regresar</button>
+        </div>
+    </div>
+
+    <script>
+        // Función para abrir el modal de confirmación
+        function confirmarSalida() {
+            document.getElementById("confirmationExitModal").style.display = "block";
+        }
+
+        // Función para cerrar el modal
+        function closeExitModal() {
+            document.getElementById("confirmationExitModal").style.display = "none";
+        }
+
+        // Función para salir (cerrar sesión y redirigir)
+        function salirSeccion() {
+            // Hacer una solicitud POST para cerrar sesión en el servidor
+            fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})  // Enviar un cuerpo vacío porque no necesitamos datos
+            }).then(response => {
+                if (response.ok) {
+                    // Si la solicitud es exitosa, redirigimos al login
+                    window.location.href = '/';  // Redirige al login
+                } else {
+                    alert('Hubo un problema al intentar cerrar sesión.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al intentar cerrar sesión.');
+            });
+        }
+
+        // Establecer el contenido predeterminado en el iframe cuando se carga la página
+        window.onload = function() {
+            document.getElementById('iframe-paginas').src = "{{ url_for('credencial') }}";
+        };
+    </script>
+</body>
+</html>

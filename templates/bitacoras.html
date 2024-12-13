@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reporte de Bitácoras</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bitacoras.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h1>Generar Reporte de Bitácoras</h1>
+
+        <form action="{{ url_for('mostrar_bitacora') }}" method="get">
+            <!-- Filtro por Fecha de Ingreso -->
+            <label for="fecha_inicio">Fecha de Ingreso:</label>
+            <input type="date" id="fecha_inicio" name="fecha_inicio">
+
+            <!-- Filtro por Nombre (Opcional) -->
+            <label for="nombre">Nombre del Usuario:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre del Usuario (opcional)">
+
+            <!-- Filtro por Carrera (Opcional) -->
+            <label for="carrera">Carrera del Usuario:</label>
+            <input type="text" id="carrera" name="carrera" placeholder="Carrera del Usuario (opcional)">
+
+            <button type="submit"><i class="fas fa-search"></i> Filtrar Resultados</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        {% if not (request.args.get('fecha_inicio') or request.args.get('nombre') or request.args.get('carrera')) %}
+            <p>Por favor, introduzca algún filtro para buscar los resultados.</p>
+        {% elif bitacoras %}
+            <h2>Resultados de la Búsqueda</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Bitácora</th>
+                        <th>Correo del Usuario</th>
+                        <th>Nombre Completo</th>
+                        <th>Carrera</th>
+                        <th>Fecha de Ingreso</th>
+                        <th>Fecha de Salida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bitacora in bitacoras %}
+                    <tr>
+                        <td>{{ bitacora[0] }}</td>
+                        <td>{{ bitacora[3] }}</td>
+                        <td>{{ bitacora[4] }} {{ bitacora[5] }} {{ bitacora[6] }}</td>
+                        <td>{{ bitacora[7] }}</td>
+                        <td>{{ bitacora[1] }}</td>  <!-- Fecha de Ingreso -->
+                        <td>{{ bitacora[2] }}</td>  <!-- Fecha de Salida (con el valor ya procesado) -->
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No se encontraron resultados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+
+            <form action="{{ url_for('generar_bitacora_pdf') }}" method="get">
+                <input type="hidden" name="fecha_inicio" value="{{ request.args.get('fecha_inicio') }}">
+                <input type="hidden" name="nombre" value="{{ request.args.get('nombre') }}">
+                <input type="hidden" name="carrera" value="{{ request.args.get('carrera') }}">
+                <button type="submit"><i class="fas fa-download"></i> Generar Reporte en PDF</button>
+            </form>
+        {% elif not bitacoras %}
+            <p>No se encontraron resultados con los filtros aplicados.</p>
+        {% endif %}
+    </div>
+</div>
+<iframe class="footer" src="{{ url_for('footer') }}" frameborder="0"></iframe>
+
+</body>
+</html>

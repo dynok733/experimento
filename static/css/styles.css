@@ -1,0 +1,169 @@
+
+body {
+    background-color: rgba(255, 255, 255, 0.8);
+    font-family: Arial, sans-serif;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between; /* Cambiado de space-between a flex-start */
+    height: 120vh;
+    margin: 0; /* Asegúrate de que no haya márgenes */
+    position: relative;
+}
+body::before {
+    content: "";
+    background-image: url('../imagenes/hix.jpg'); /* Reemplaza con la ruta de tu imagen */
+    background-size: cover; /* La imagen cubre todo el fondo */
+    background-position: center; /* Centra la imagen */
+    position: absolute; /* Posición absoluta para cubrir todo el body */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.7; /* Opacidad de la imagen de fondo */
+    height: 100vh;}
+
+.container {
+    position: relative;
+    width: 70%;
+    display: flex; /* Usar flexbox para alinear imagen y formulario */
+    background-color: #ffffff; /* Fondo gris oscuro para el contenedor */
+    border: 2px solid #444;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Sombra del contenedor */
+    overflow: hidden;
+    margin: auto; /* O puedes eliminarlo completamente */
+    padding: 0;
+    
+}
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        flex-direction: column; /* Cambia la dirección del flex a columna */
+    }
+
+    .foto {
+        width: 100%; /* La imagen ocupa todo el ancho */
+        border-radius: 8px 8px 0 0; /* Bordes redondeados solo en la parte inferior */
+    }
+
+    .formulario {
+        border-radius: 8px 8px 0 0; /* Bordes redondeados solo en la parte superior */
+        margin-top: -1px; /* Evita el espacio entre imagen y formulario */
+    }
+}
+
+
+.foto {
+    flex: 1; /* La imagen ocupa el 50% del espacio */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; /* Sin margen */
+    overflow: hidden; /* Ocultar cualquier desbordamiento */
+}
+
+.foto img {
+    width: 100%; /* Asegura que la imagen ocupe todo el espacio disponible */
+    height: 100%; /* Mantiene la altura de la imagen al 100% */
+    object-fit: cover; /* Mantiene la proporción de la imagen y la recorta si es necesario */
+    border-radius: 8px 0 0 8px; /* Arriba izquierda y abajo izquierda */
+
+
+
+}
+.formulario {
+    flex: 1; /* El formulario ocupa el otro 50% del espacio */
+    padding: 20px; /* Espaciado interno */
+}
+
+
+h1 {
+    text-align: center; /* Título centrado */
+    font-size: 24px; /* Tamaño de fuente del título */
+    margin-bottom: 20px; /* Espaciado entre el título y el formulario */
+}
+
+
+.input-group {
+    position: relative; /* Permite que los iconos se posicionen en relación al campo de entrada */
+    margin: 10px 0; /* Espaciado vertical entre los campos */
+}
+
+.input-group i {
+    position: absolute; /* Posiciona el icono de forma absoluta dentro del contenedor */
+    top: 50%; /* Centra el icono verticalmente */
+    transform: translateY(-50%); /* Ajusta el icono para que esté perfectamente centrado */
+    color: #000000; /* Color blanco para los iconos */
+}
+
+.input-group i:first-child {
+    left: 10px; /* Icono de usuario a la izquierda */
+}
+
+.input-group i:nth-child(2) {
+    left: 10px; /* Icono de correo a la izquierda */
+}
+
+.input-group i:last-child {
+    right: 10px; /* Icono de ojo a la derecha */
+}
+
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 87%; /* Ancho de los campos de entrada */
+    padding: 10px 10px 10px 40px; /* Espaciado interno, más espacio a la izquierda para el icono */
+    margin: 0; /* Sin margen */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    background-color: transparent; /* Fondo completamente transparente */
+    color: #000000; /* Color del texto */
+    border-bottom: 2px solid #000000; /* Línea blanca en la parte inferior */
+    outline: none; /* Quitar el borde de enfoque */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-bottom: 2px solid #aaa; /* Línea gris clara al enfocar */
+}
+
+input[type="checkbox"] {
+    margin-right: 5px; /* Espaciado a la derecha del checkbox */
+}
+
+input[type="submit"] {
+    width: 100%; /* Ancho completo para el botón */
+    padding: 10px; /* Espaciado interno */
+    background-color: #555; /* Color de fondo del botón */
+    color: #fff; /* Color del texto del botón */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+    font-size: 16px; /* Tamaño de fuente del botón */
+}
+
+input[type="submit"]:hover {
+    background-color: rgba(0, 128, 0, 0.5); /* Verde oscuro con 50% de opacidad */
+     /* Color de fondo al pasar el ratón sobre el botón */
+}
+.footer {
+    width: 100%;
+    height: 165px; /* Altura estándar */
+    border: none; 
+    padding: 0;
+    position: relative; /* En flujo normal del documento */
+    color: white; /* Asegúrate de que el texto sea legible */
+    margin: 0;
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 600px) {
+    .footer {
+        width: 100%;
+        height: 285px; /* Altura estándar */
+    }
+
+}

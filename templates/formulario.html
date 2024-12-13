@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro de Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script>
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function editarUsuario(usuario) {
+            // Llenamos el formulario con los datos del usuario que se va a editar
+            document.getElementById('nombres').value = usuario.nombres || '';
+            document.getElementById('apellido_p').value = usuario.apellido_p || '';
+            document.getElementById('apellido_m').value = usuario.apellido_m || '';
+            document.getElementById('matricula').value = usuario.matricula || '';
+            document.getElementById('carrera').value = usuario.carrera || '';
+            document.getElementById('correo').value = usuario.correo || '';
+            document.getElementById('id_rol').value = usuario.id_rol || '';
+
+            // Si hay imagen, la puedes mostrar aquí también (esto es opcional)
+            if (usuario.imagen) {
+                document.getElementById('imagen_actual').style.display = 'block';
+                document.getElementById('imagen_actual').src = usuario.imagen;
+            }
+
+            // Cambiamos el texto del botón
+            document.getElementById('submit_button').innerText = 'Actualizar Usuario';
+
+            // Cambiamos el formulario para que apunte a la ruta de edición
+            document.getElementById('form_editar').action = `/editar/${usuario.id_usuario}`;
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="form-container">
+            <h1>Buscar Usuario</h1>
+
+            <!-- Formulario de búsqueda por correo -->
+            <form method="GET" action="{{ url_for('index') }}">
+                <label for="search_email">Buscar por Correo:</label>
+                <input type="email" name="search_email" id="search_email" placeholder="Buscar por correo...">
+                <button type="submit">Buscar</button>
+            </form>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class="error-messages">
+                        <li>{{ messages[-1] }}</li>
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            <h1>Registro de Usuario</h1>
+
+            <!-- Formulario de registro de usuario -->
+            <form id="form_editar" action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
+                <label for="nombres">Nombres:</label>
+                <input type="text" name="nombres" id="nombres" required>
+
+                <label for="apellido_p">Apellido Paterno:</label>
+                <input type="text" name="apellido_p" id="apellido_p" required>
+
+                <label for="apellido_m">Apellido Materno:</label>
+                <input type="text" name="apellido_m" id="apellido_m" required>
+
+                <label for="matricula">Matrícula:</label>
+                <input type="text" name="matricula" id="matricula" required>
+
+                <label for="carrera">Carrera:</label>
+                <input type="text" name="carrera" id="carrera" required>
+
+                <label for="correo">Correo:</label>
+                <input type="email" name="correo" id="correo" required>
+
+                <label for="id_rol">Rol:</label>
+                <select name="id_rol" id="id_rol" required>
+                    <option value="2">Administrador</option>
+                    <option value="3">Policia</option>
+                    <option value="4">Estudiante</option>
+                    <option value="5">Profesor</option>
+                </select>
+
+                <label for="imagen">Imagen:</label>
+                <input type="file" name="imagen" id="imagen">
+
+                <img id="imagen_actual" src="" style="display:none;" alt="Imagen actual" width="50" height="50">
+
+                <button type="submit" id="submit_button">Registrar Usuario</button>
+            </form>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+            <h2>Usuarios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido Paterno</th>
+                        <th>Apellido Materno</th>
+                        <th>Matrícula</th>
+                        <th>Carrera</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Imagen</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario[0] }}</td>
+                        <td>{{ usuario[1] }}</td>
+                        <td>{{ usuario[2] }}</td>
+                        <td>{{ usuario[3] }}</td>
+                        <td>{{ usuario[4] }}</td>
+                        <td>{{ usuario[5] }}</td>
+                        <td>{{ usuario[6] }}</td>
+                        <td>{{ usuario[7] }}</td>
+                        <td>
+                            {% if usuario[8] %}
+                                <img src="{{ url_for('imagen', id_usuario=usuario[0]) }}" alt="Imagen de usuario" width="50" height="50">
+                            {% else %}
+                                No tiene imagen
+                            {% endif %}
+                        </td>
+                        <td class="actions">
+                            <a href="javascript:void(0)" class="btn-edit" onclick="editarUsuario({
+                                'id_usuario': {{ usuario[0] }},
+                                'nombres': '{{ usuario[1] }}',
+                                'apellido_p': '{{ usuario[2] }}',
+                                'apellido_m': '{{ usuario[3] }}',
+                                'matricula': '{{ usuario[4] }}',
+                                'carrera': '{{ usuario[5] }}',
+                                'correo': '{{ usuario[6] }}',
+                                'id_rol': {{ usuario[7] }},
+                                'imagen': '{{ url_for('imagen', id_usuario=usuario[0]) }}'
+                            })">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a href="{{ url_for('eliminar_usuario', id_usuario=usuario[0]) }}" class="btn-delete" onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="10">No hay usuarios registrados</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <iframe class="footer" src="{{ url_for('footer') }}" frameborder="0"></iframe>
+
+</body>
+
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lector de Código QR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contraseña.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        canvas {
+            width: 100%;
+            max-width: 700px;
+            border: 1px solid black;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: green;
+        }
+
+        /* Estilo del Modal */
+        .modal {
+            display: none; /* Inicialmente está oculto */
+            position: fixed;
+            z-index: 1; /* Para que aparezca encima de todo */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro con algo de transparencia */
+        }
+
+        /* Estilo del contenido del Modal */
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            border-radius: 5px;
+            width: 100%; /* El modal ocupa el 100% del ancho */
+            max-width: 400px; /* Máximo de 400px para no ocupar demasiado en pantallas grandes */
+            text-align: center;
+            box-sizing: border-box; /* Para incluir padding dentro del width */
+        }
+
+        /* Asegura que la imagen dentro del modal esté centrada y sea responsiva */
+        .user-image {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 0 auto;
+            display: block;
+            margin-top: 20px;
+            max-width: 80%; /* Hace que la imagen se ajuste al ancho de la pantalla en móviles */
+        }
+
+        /* Añadir margen entre los elementos */
+        .modal-content p,
+        .modal-content img,
+        .modal-content .button {
+            margin-bottom: 15px;
+        }
+
+        /* Botón de cierre y de acción */
+        .button {
+            width: 90%;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        /* Botón rojo para "Usuario Denegado" */
+        .button-denegado {
+            background-color: #f44336; /* Rojo */
+            color: white;
+        }
+
+        .button-denegado:hover {
+            background-color: #da190b; /* Rojo oscuro */
+        }
+
+        /* Estilos responsivos para pantallas pequeñas */
+        @media (max-width: 600px) {
+            .modal-content {
+                margin: 10% auto; /* Reduce el margen superior e inferior */
+                width: 90%; /* El modal ocupa el 90% del ancho en pantallas pequeñas */
+                max-width: 350px; /* Para asegurarse de que no se vea muy grande en pantallas pequeñas */
+            }
+
+            .user-image {
+                width: 80px; /* La imagen será más pequeña en pantallas pequeñas */
+                height: 80px;
+            }
+
+            .button {
+                width: 80%; /* Hace que el botón ocupe todo el ancho en pantallas pequeñas */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    
+        <!-- Modal (ventana flotante) -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+                
+                <!-- Primero la imagen centrada -->
+                <img id="modal-imagen" class="user-image" src="" alt="Foto del usuario" style="display: none;">
+
+                <!-- Luego el nombre -->
+                <p id="modal-nombre" style="display: none;"><strong>Nombre:</strong> <span id="modal-nombre-text"></span></p>
+
+                <!-- Después la matrícula -->
+                <p id="modal-matricula" style="display: none;"><strong>Matrícula:</strong> <span id="modal-matricula-text"></span></p>
+
+                <!-- Finalmente el botón -->
+                <button class="button button-denegado" id="closeModalButton">Salir</button>
+            </div>
+        </div>
+        <h1>Lector de Código QR</h1>
+        <canvas id="qr-canvas"></canvas>
+        <div id="result"></div>
+
+    </div>
+
+    <iframe class="footer" src="{{ url_for('footer') }}" frameborder="0"></iframe>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script>
+        // Variable para controlar si ya se procesó un QR
+        let qrDetected = false;
+        let lastMatricula = null; // Variable para almacenar la última matrícula procesada
+
+        // Obtener el elemento de canvas y el área para mostrar el resultado
+        const canvasElement = document.getElementById('qr-canvas');
+        const resultElement = document.getElementById('result');
+        const context = canvasElement.getContext('2d');
+
+        // Obtener el modal y los elementos del modal
+        const modal = document.getElementById("myModal");
+        const modalMessage = document.getElementById("modal-message");
+        const modalMatricula = document.getElementById("modal-matricula");
+        const modalMatriculaText = document.getElementById("modal-matricula-text");
+        const modalNombre = document.getElementById("modal-nombre");
+        const modalNombreText = document.getElementById("modal-nombre-text");
+        const modalImagen = document.getElementById("modal-imagen");
+        const closeModalButton = document.getElementById("closeModalButton");
+        const closeModalSpan = document.getElementsByClassName("close")[0];
+
+        // Solicitar acceso a la cámara
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                const videoTrack = stream.getVideoTracks()[0];
+                const videoWidth = videoTrack.getSettings().width;
+                const videoHeight = videoTrack.getSettings().height;
+
+                canvasElement.width = videoWidth;
+                canvasElement.height = videoHeight;
+
+                const videoElement = document.createElement('video');
+                videoElement.srcObject = stream;
+                videoElement.play();
+
+                // Función para dibujar el borde verde alrededor del QR detectado
+                function drawQRCodeFrame(qrCode) {
+                    const margin = 10; // Margen adicional al rededor del QR
+                    context.beginPath();
+                    context.lineWidth = 5;
+                    context.strokeStyle = 'green';
+                    context.rect(
+                        qrCode.location.topLeftCorner.x - margin,
+                        qrCode.location.topLeftCorner.y - margin,
+                        qrCode.location.bottomRightCorner.x - qrCode.location.topLeftCorner.x + 2 * margin,
+                        qrCode.location.bottomRightCorner.y - qrCode.location.topLeftCorner.y + 2 * margin
+                    );
+                    context.stroke();
+                }
+
+                // Función para procesar los fotogramas del video y buscar QR
+                function scanQRCode() {
+                    if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+                        context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                        const imageData = context.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                        const code = jsQR(imageData.data, canvasElement.width, canvasElement.height);
+
+                        if (code && code.data !== lastMatricula && !qrDetected) {  // Evitar procesar el mismo código varias veces
+                            const matricula = code.data;  // Aquí obtenemos la matrícula del QR
+                            resultElement.textContent = `Matrícula Detectada: ${matricula}`;
+                            verifyMatricula(matricula);
+                            drawQRCodeFrame(code);
+
+                            lastMatricula = matricula; // Guardar el código para evitar duplicados
+                            qrDetected = true; // Marcar como procesado
+                        } else {
+                            resultElement.textContent = ''; // Si no hay QR o ya fue procesado
+                        }
+                    }
+
+                    requestAnimationFrame(scanQRCode);
+                }
+
+                // Función para verificar la matrícula en la base de datos (backend)
+                function verifyMatricula(matricula) {
+                    fetch('/verificar_matricula', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ matricula: matricula })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.existe) {
+                            showModal(data);
+                        } else {
+                            showModalError();
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error al verificar matrícula:", err);
+                        alert("Hubo un problema al verificar la matrícula.");
+                    });
+                }
+
+                // Función para mostrar el modal con los datos del usuario
+                function showModal(data) {
+                    modalMessage.textContent = "Usuario Correcto";
+                    modalMatricula.style.display = "block";
+                    modalMatriculaText.textContent = data.matricula;
+                    modalNombre.style.display = "block";
+                    modalNombreText.textContent = `${data.nombres} ${data.apellido_p} ${data.apellido_m}`;
+
+                    // Si hay imagen, la mostramos
+                    if (data.imagen) {
+                        modalImagen.src = `data:image/png;base64,${data.imagen}`;
+                        modalImagen.style.display = "block";
+                    } else {
+                        modalImagen.style.display = "none"; // Ocultar imagen si no existe
+                    }
+
+                    modal.style.display = "block";
+                    closeModalButton.classList.remove("button-denegado");
+                    closeModalButton.classList.add("button");
+                }
+
+                // Función para mostrar un modal de error (Usuario Denegado)
+                function showModalError() {
+                    modalMessage.textContent = "Usuario Denegado";
+                    modalMatricula.style.display = "none"; // Ocultar matrícula
+                    modalNombre.style.display = "none"; // Ocultar nombre
+                    modalImagen.style.display = "none"; // Ocultar imagen
+
+                    modal.style.display = "block";
+                    closeModalButton.classList.add("button-denegado"); // Estilo rojo para "Salir"
+                }
+
+                // Cerrar el modal
+                closeModalButton.onclick = function() {
+                    modal.style.display = "none";
+                    qrDetected = false;  // Reiniciar el flag para permitir detección de un nuevo QR
+                }
+                closeModalSpan.onclick = function() {
+                    modal.style.display = "none";
+                    qrDetected = false;  // Reiniciar el flag para permitir detección de un nuevo QR
+                }
+
+                // Iniciar el escaneo
+                scanQRCode();
+            })
+            .catch(err => {
+                alert("No se pudo acceder a la cámara: " + err.message);
+            });
+    </script>
+</body>
+</html>

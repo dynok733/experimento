@@ -1,0 +1,90 @@
+/* Elimina márgenes y padding predeterminados */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;  /* Aplica la tipografía Arial a todo el cuerpo */
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos del nav */
+nav {
+    background-color: rgb(80, 80, 80); /* Fondo principal del nav */
+    width: 100%;
+    height: 40px;  /* Altura del nav */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+}
+
+/* Contenedor de los enlaces dentro del nav */
+nav div {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    max-width: 1900px; /* Limita el ancho del nav para que no se estire demasiado en pantallas grandes */
+}
+
+/* Estilos de los enlaces del menú */
+nav a {
+    width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: rgb(80, 80, 80); /* Color de fondo por defecto de los enlaces */
+    color: white;  /* Color del texto por defecto */
+    text-decoration: none;
+    padding: 25px; /* Padding para mejorar la visualización */
+    margin: 0; /* Evitar márgenes innecesarios */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave para fondo y color */
+}
+
+/* Hover de los enlaces */
+nav a:hover {
+    background-color: rgb(100, 100, 100); /* Fondo más claro cuando se pasa el cursor */
+    color: #FFD700; /* Cambia el color del texto a dorado (puedes elegir el color que prefieras) */
+}
+
+/* Estilos del contenedor del menú hamburguesa (eliminado) */
+nav .menu-icon {
+    display: none;
+}
+
+/* Estilos del contenedor del menú en pantallas pequeñas */
+@media (max-width: 768px) {
+    nav {
+        height: auto; /* Ajustar la altura del nav en móviles */
+        padding: 10px 0; /* Espaciado superior e inferior */
+    }
+
+    /* Los enlaces estarán alineados verticalmente en pantallas pequeñas */
+    nav a {
+        display: block; /* Los enlaces se muestran como bloques */
+        text-align: center; /* Centramos el texto */
+        padding: 15px 0; /* Ajuste de padding en dispositivos pequeños */
+    }
+
+    /* Eliminar la propiedad 'menu-icon' en pantallas pequeñas */
+    nav .menu-icon {
+        display: none;
+    }
+}
+
+/* Estilo para el iframe */
+main {
+    width: 100%;
+    min-height: 450px;
+}
+
+iframe {
+    background-color: white;
+    position: relative;
+    width: 100%;
+    height: 90vh;
+}

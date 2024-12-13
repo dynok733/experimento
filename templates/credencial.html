@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credencial</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/credencial.css') }}">
+</head>
+<body>
+
+    <div class="credencial">
+        <div class="background-im"></div> <!-- Div para la imagen de fondo -->
+        <div class="background-image"></div> <!-- Div para la imagen de fondo -->
+        
+        <div class="logos">
+            <img src="{{ url_for('static', filename='imagenes/estado.png') }}" alt="Código QR">
+            <img src="{{ url_for('static', filename='imagenes/Educacion.png') }}" alt="Código QR">
+            <img src="{{ url_for('static', filename='imagenes/Tesh.png') }}" alt="Código QR">
+        </div>
+        
+        <div class="contenido">
+            <div class="foto">
+                {% if imagen %}
+                    <img src="data:image/png;base64,{{ imagen }}" alt="Foto del usuario">
+                {% else %}
+                    <img src="{{ url_for('static', filename='imagenes/default.png') }}" alt="Foto por defecto">
+                {% endif %}
+            </div>
+            <div class="info">
+                <p>Nombre: <strong>{{ nombre }}</strong></p>
+                <p>Numero de Control: <strong>{{ matricula }}</strong></p>
+                <p>Programa Educativo: <strong>{{ carrera }}</strong></p>
+                <p>Cargo: <strong>
+                    {% if rol == 2 %}
+                        Administrador
+                    {% elif rol == 3 %}
+                        Policía
+                    {% elif rol == 4 %}
+                        Estudiante
+                    {% elif rol == 5 %}
+                        Profesor
+                    {% else %}
+                        Desconocido
+                    {% endif %}
+                </strong></p>
+            </div>
+            <div class="qr">
+                <img src="data:image/png;base64,{{ qr_code }}" alt="Código QR de matrícula">
+            </div>
+        </div>
+        
+        <div class="empresa">
+            <p>CREDENCIAL DEL ESCOLAR</p>
+        </div>
+    </div>
+
+    <iframe class="footer" src="{{ url_for('footer') }}" frameborder="0"></iframe>
+</body>
+</html>

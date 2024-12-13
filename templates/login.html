@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Agrega aquí tu CSS si es necesario */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="foto">
+            <img src="{{ url_for('static', filename='imagenes/hix.jpg') }}" alt="Código QR">
+        </div>
+        <div class="formulario">
+            <form method="POST" action="{{ url_for('do_login') }}">
+                <h1>Bienvenido</h1>
+                <label for="correo">Correo:</label>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="email" id="correo" name="correo" placeholder="Usuario@huixquilucan.tecnm.mx" required>
+                </div>
+                <label for="contrasena">Contraseña:</label>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                    <i class="fas fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+                </div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+                <input type="submit" value="Entrar">
+              
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('contrasena');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePassword.classList.toggle('fa-eye-slash');
+        });
+
+        document.querySelector('form').addEventListener('submit', (event) => {
+            // Aquí podrías agregar más validaciones si lo deseas
+            console.log('Formulario enviado');
+        });
+    </script>
+           <iframe class="footer" src="{{ url_for('footer') }}" frameborder="0"></iframe>
+
+</body>
+</html>

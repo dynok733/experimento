@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros de Roles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/roles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container">
+        <h1>Registros</h1>  
+            <!-- Buscador -->
+        <div class="search-container">
+            <form method="GET" action="{{ url_for('roles') }}">
+                <input type="text" name="search_rol" placeholder="Buscar rol..." value="{{ request.args.get('search_rol', '') }}">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+        <h1>Registros</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="error-messages">
+                    <li>{{ messages[-1] }}</li>
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Formulario para agregar o editar un rol -->
+        <form id="form_editar_rol" action="{{ url_for('submit_rol') }}" method="POST">
+            <label for="rol">Nombre del Rol:</label>
+            <input type="text" name="rol" id="rol" required>
+
+            <button type="submit" id="submit_button">Registrar Rol</button>
+        </form>
+    </div>
+
+
+
+    <div class="table-container">
+        <h2>Roles</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rol in roles %}
+                <tr>
+                    <td>{{ rol[0] }}</td>
+                    <td>{{ rol[1] }}</td>
+                    <td class="actions">
+                        <a href="javascript:void(0)" class="btn-edit" onclick="editarRol({
+                            'id_rol': {{ rol[0] }},
+                            'rol': '{{ rol[1] }}'
+                        })">
+                            <i class="fas fa-pencil-alt"></i> <!-- Icono de lápiz para Editar -->
+                        </a>
+                        <a href="{{ url_for('eliminar_rol', id_rol=rol[0]) }}" class="btn-delete" onclick="return confirm('¿Estás seguro de eliminar este rol?')">
+                            <i class="fas fa-trash-alt"></i> <!-- Icono de papelera para Eliminar -->
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No hay roles registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    function editarRol(rol) {
+        // Llenamos el formulario con los datos del rol que se va a editar
+        document.getElementById('rol').value = rol.rol || '';
+        document.getElementById('submit_button').innerText = 'Actualizar Rol';
+        document.getElementById('form_editar_rol').action = `/editar_rol/${rol.id_rol}`;
+    }
+</script>
+<iframe class="footer" src="{{ url_for('footer') }}" frameborder="0"></iframe>
+</body>
+</html>

@@ -1,0 +1,48 @@
+* {
+    border: 0;
+    padding: 0;
+    margin: 0; /* Asegura que no haya márgenes por defecto */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+footer {
+    display: flex;
+    flex-direction: column; /* Cambia a columna en móviles */
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: rgb(0, 0, 0);
+}
+
+
+footer ul {
+    list-style: none;
+    padding: 0; /* Elimina el padding de la lista */
+}
+
+footer h3, footer h4, footer p, footer a {
+    color: white;
+    text-decoration: none;
+    margin: 5px 0; /* Añade márgenes para espaciar elementos */
+    text-align: center; /* Centra el texto */
+}
+
+
+#newsletter {
+    height: auto; /* Cambia a auto para permitir flexibilidad */
+    margin-top: 10px; /* Añade un margen superior para espaciarlo */
+}
+
+@media(max-width: 768px) { /* Media query para pantallas más pequeñas */
+    footer {
+        flex-direction: column; /* Asegura que sea vertical en móviles */
+        padding: 0px; /* Menos padding en pantallas pequeñas */
+    }
+
+    footer h3, footer h4, footer p {
+        font-size: 1.2rem; /* Ajusta el tamaño de fuente en móviles */
+    }
+}
